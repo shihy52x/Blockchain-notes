@@ -2,8 +2,8 @@
 实现员工的薪酬支付
 ## Hello world 智能合约
 
-> Hello world 智能合约
-
+ Hello world 智能合约
+''''
 programa  solidity ^0.4.0
 
 contract SimpleStorage {
@@ -17,3 +17,4 @@ contract SimpleStorage {
     return storageData; 
   }
 }
+''''
