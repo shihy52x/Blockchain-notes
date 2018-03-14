@@ -74,10 +74,11 @@ After you "create" and click set, you will see a “detail” button in the info
   是solidity中一种原生的数据类型，像python中的dictionary一样也是数据类型。
   在数字货币里有各种各样的地址，智能合约本身也是有个地址，叫contract address
   地址有几个重要的成员变量和函数
-  - address.balance - 成员变量：地址里面还有多少钱
-  - address.transfer(value)：成员函数，后面课程会着重讲。transfer
-  - address.send(value)，返回一个布尔值，表示call 是否成功
-  - address.call, address.callcode and addresss.delegatecall： 更多会用在只能合约
+  
+ - address.balance - 成员变量：地址里面还有多少钱
+ - address.transfer(value)：成员函数，后面课程会着重讲。transfer
+ - address.send(value)，返回一个布尔值，表示call 是否成功
+ - address.call, address.callcode and addresss.delegatecall： 更多会用在只能合约
  
  ### 设计
  - 薪水将全部基于比特币
