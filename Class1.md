@@ -54,7 +54,7 @@ After you "create" and click set, you will see a “detail” button in the info
 ## 类型系统
  静态类型：要申明，像c，不像python
  
- ### 布尔型：BOOL
+### 布尔型：BOOL
  - ture
  - false
  - 操作符
@@ -63,14 +63,14 @@ After you "create" and click set, you will see a “detail” button in the info
   - ||
   - ==
   - ~=
-  ### 整型 UINT/INT
+ ### 整型 UINT/INT
    - 操作符：
     - 比较：<=,<,==,!=,>=,>
     - 位操作 : &,|,~,>>,<<
     - 计算： + - * / % **
   注意，在solidity里，目前编译器中是没有floating的！！
   
-  ### 地址ADDRESS
+ ### 地址ADDRESS
   是solidity中一种原生的数据类型，像python中的dictionary一样也是数据类型。
   在数字货币里有各种各样的地址，智能合约本身也是有个地址，叫contract address
   地址有几个重要的成员变量和函数
