@@ -7,7 +7,7 @@
 ### revert 和 require 的使用：
 
 
-
+```ruby
 pragma  solidity ^0.4.14;
 
 contract Payroll{
@@ -53,7 +53,7 @@ contract Payroll{
         employee = x;
     }
 }
-
+```
 
 
 ### 支持多人的多员工系统
