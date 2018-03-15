@@ -145,7 +145,7 @@ contract Test{
     
     
     
-``` 
+```ruby
  pragma  solidity ^0.4.14;
 
 contract Payroll{
