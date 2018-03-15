@@ -141,7 +141,9 @@ contract Test{
  - 相同存储空间赋值，传递reference（EVM上的内存地址，像指针）
  - 对于不同存储空间的变量赋值：复杂
     - copy Employee employee = findEmployee(EmployeeId)，这个function返回的是一个memory的地址，在funciton中，storage没有传递reference给employee，而是copy了一份到memory中，那么现在对employee的任何操作都不会影响employees了
-    -
+
+    
+    
     
 ```` 
 
