@@ -2,7 +2,9 @@
 错误检测：
 - assert(bool) 确认 一般是在程序运行当中查看是否出现运行错误
 - require(bool) 要求 检测在程序输入的值满足要求
-可以替换很多if语句。
+可以替换很多if语句
+
+### revert 和 require 的使用：
 
 ```
 pragma  solidity ^0.4.14;
@@ -51,3 +53,4 @@ contract Payroll{
     }
 }
 ```
+### 多员工系统
