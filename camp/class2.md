@@ -99,9 +99,9 @@ contract Test{
  ```
 ## 设计
 - 通过数组储存多个员工的信息：
- - address[] employee
- - uint[] salary
- - uint[] lastPayday
+    - address[] employee
+    - uint[] salary
+    - uint[] lastPayday
 - Struct
 ```
   struct Employee {
