@@ -6,7 +6,7 @@
 
 ### revert 和 require 的使用：
 
-````
+
 
 pragma  solidity ^0.4.14;
 
@@ -54,7 +54,7 @@ contract Payroll{
     }
 }
 
-````
+
 
 ### 支持多人的多员工系统
 
@@ -67,7 +67,7 @@ contract Payroll{
  
 ### Test of static array
  
- ````
+ 
  
  pragma  solidity ^0.4.14;
 
@@ -82,11 +82,11 @@ contract Test{
     
 }
 
- ````
+ 
  
 ### Test of dynamic array
 
- ````
+ 
  
 pragma  solidity ^0.4.14;
 
@@ -102,7 +102,7 @@ contract Test{
     
 }
 
- ````
+ 
  
 ## 设计
 - 通过数组储存多个员工的信息：
@@ -111,7 +111,7 @@ contract Test{
     - uint[] lastPayday
 - Struct
 
-````
+
 
   struct Employee {
     address id;
@@ -121,7 +121,7 @@ contract Test{
   
   Employee frank;
   
-  ````
+  
   
   ## 数据存储 DATA LOCATIOn
  
