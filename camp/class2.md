@@ -110,4 +110,27 @@ contract Test{
     uint salary;
     uint lastPayday;
   }
-  ```
+  
+  Employee frank;
+  ```
+  
+  ## 数据存储 DATA LOCATIOn
+ 
+ - storage: EVM上一个永久性的空间，在区块儿链上
+ - memory： 在EVM上一个临时的空间，function运行完后就消失
+ - call data，类似于memory，也会在function 运行完后消失。
+ 
+ 强制
+ -状态变量一定在storage
+ - function 输入参数：call data
+ 
+ 默认
+ -function 返回参数：memory
+ - 本地变量 storage
+ 
+ 规则
+ - 相同存储空间赋值，传递reference（EVM上的内存地址，像指针）
+ - 对于不同存储空间的变量赋值：复杂
+    - copy Employee employee = findEmployee(EmployeeId)，这个function返回的是一个memory的地址，在funciton中，storage没有传递reference给employee，而是copy了一份到memory中，那么现在对employee的任何操作都不会影响employees了
+    -
+ 
