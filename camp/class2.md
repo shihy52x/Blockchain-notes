@@ -62,7 +62,7 @@ contract Payroll{
  - length
  - push 适用于动态数组，添加成员
  
- Test of static array
+### Test of static array
  
  ```
  pragma  solidity ^0.4.14;
@@ -79,7 +79,7 @@ contract Test{
 }
  ```
  
- Test of dynamic array
+### Test of dynamic array
 
  ```
 pragma  solidity ^0.4.14;
@@ -97,3 +97,16 @@ contract Test{
 }
 
  ```
+## 设计
+- 通过数组储存多个员工的信息：
+ - address[] employee
+ - uint[] salary
+ - uint[] lastPayday
+- Struct
+```
+  struct Employee {
+    address id;
+    uint salary;
+    uint lastPayday;
+  }
+  ```
