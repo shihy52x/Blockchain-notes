@@ -62,8 +62,38 @@ contract Payroll{
  - length
  - push 适用于动态数组，添加成员
  
- ```
+ Test of static array
  
  ```
- 
+ pragma  solidity ^0.4.14;
 
+contract Test{
+    uint[2] a;
+    
+    function test()returns(uint, uint){
+        a[0] = 1 ;
+        a[1] = 2 ;
+        return (a[0],a[1]);
+    }
+    
+}
+ ```
+ 
+ Test of dynamic array
+
+ ```
+pragma  solidity ^0.4.14;
+
+contract Test{
+    uint[] a;
+    
+    function test()returns(uint, uint,uint){
+       a.push(1);
+       a.push(2);
+       
+        return (a[0],a[1],a.length);
+    }
+    
+}
+
+ ```
