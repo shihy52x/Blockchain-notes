@@ -147,6 +147,25 @@ contract Payroll {
 #### 状态变量的可视度 
 - public， internal（default），private 
 - 如果定义public相当于定义一个取值函数
+- 如果定义为private不代表肉眼无法看到，只代表其他智能合约无法看到
+#### 函数
+- 四种都可以，默认public
+- 关于external,作用：告诉合约未来的开发者，不希望此函数在合约内部使用.
+```
+contract Test{
+ function func1 external (){
+ }
+ function func2(){}
+  func1();
+}
+//此处error will be reported. 但是你可以用this.func1()来调用同一个合约中的其他函数.this 相当于把func1当作是外部函数来处理
+//如果func1 是非external类型，this.func1() 和 func1（）都可以用，不过this.func1()会贵一些
+```
+
+### 继承
+
+#### 基本语法
+
 
 # 问题
 - 提问问题在哪里？
