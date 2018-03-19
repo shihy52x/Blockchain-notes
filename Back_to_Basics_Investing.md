@@ -34,8 +34,16 @@ or small bussiness)
 - 其实通胀的风险被很多人忽视
 - 风险只能减小不能消除，没有风险的人生是不fun的，没有风险的投资是不可能有高回报的。
 ## Market -Value risk
-- 的确，2000年的tech bubble和08年的金融危机让股票的价格跌幅过半，但是因此就把钱都放在银行的话，你会失去了重要的积累财富的方法。这个方法被历史证明是非常
-重要的
+- 的确，2000年的tech bubble和08年的金融危机让股票的价格跌幅过半，但是因此就把钱都放在银行的话，你会失去了重要的积累财富的方法。这个方法被历史证明是非常重要的
+
+## Diversify for stability
+因为很多美国公司都有海外的生意，所以你在买美国公司的股票的时候，也算间接地分散了风险到海外
+
+## Consider your time horizon
+- 时间尺度很重要。stock和bond market里，一年之内有2/3 的时间你是在赚钱，1/3的时间是在lose money
+- stock 的收益/风险比好于 bond //对年轻人，有风险承担能力的人，可以考虑多take 一些risk
+## 关于overpriced market
+- buy low , sell high可能难，但是评估某个市场是否overpriced还是underpriced难度会小很多
 
 
   
