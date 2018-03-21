@@ -164,7 +164,233 @@ contract Test{
 
 ### 继承
 
+#### 
 #### 基本语法
+
+```
+pragma solidity ^0.4.14;
+
+contract owned {
+    address owner;
+    function owned(){
+        owner = msg.sender;
+    }
+
+}
+
+
+contract Parent is owned{
+    // Parent inherit from owned;
+    uint x;
+    function Parent (uint _x){
+        x = _x;
+    }
+    
+    
+    function parentFunc1() internal {
+    
+        if (msg.sender == owner) selfdestruct(owner);
+    }
+    
+    function parentFunc2 () public {
+        
+    }
+    
+    function parentFunc3 () external {
+        
+    }
+    
+    function parentFunc4 () private {
+        
+    }
+    
+}
+
+contract Child is Parent{
+    
+    uint y;
+    function Child(uint _y) Parent(_y*y){
+        y = _y;
+    }
+    //Parent（）zhe'li这里这里是shi这里due to parent class need the construction. Write down the parameter that parent need  
+    
+    function child(){
+        parentFunc2();
+        parentFunc1();
+        this.parentFunc3();// you can only call parentFunc3 by this.
+       // parentFunc4(); // you will see warning here
+        
+    }
+    
+}
+    contract Child2 is Parent(666){
+        //construct parent at the definitiohn of Child2 by passing a constant 666
+        uint y;
+        function Child2(uint _y){
+            y = -y;
+        }
+    }
+```
+
+#### 抽象合约（这种合约是没有办法部署到区块链上的）
+父类的某个函数没有定义
+```
+pragma solidity ^0.4.14;
+
+contract owned {
+    address owner;
+    function owned(){
+        owner = msg.sender;
+    }
+
+}
+
+
+contract Parent is owned{
+    // Parent inherit from owned;
+    uint x;
+    function SomeFunc () returns(uint);
+    
+}
+
+contract Child is Parent{
+    
+    uint y;
+    function SomeFunc() returns(uint){
+        // SomeFunc is defined in children, not in parent: this is called Abstract contract. 
+        return 1    ;
+    }
+}
+
+```
+#### 继承-Interface
+像抽象合约，但本身离合约更远一步
+跟抽象合约相比：
+抽象合约可以有自己的状态变量，创造函数
+但interface只是一个告诉之后编程人的框架，告诉大家要实现什么功能。只有function定义，剩下什么都没有
+所以子类继承interface的时候，要求要把没有实现的函数全部实现，不能有虚函数存在（void），否则无法部署在虚拟机上。
+
+```
+pragma solidity ^0.4.14;
+
+interface Parent{
+    //不可继承其他合约或者Interface
+    //没有构造函数
+    //没有状态变量
+    //没有struct
+    //没有enum
+    //简单说，只有function定义，啥都没有！
+ function SomeFunc () returns(uint);
+    
+}
+
+contract Child is Parent{
+    
+    uint y;
+    function SomeFunc() returns(uint){
+        return 1    ;
+    }
+}
+
+
+```
+#### 继承- 多继承
+最复杂：
+solidity其他不行，但这个倒是很完备
+```
+```
+##### 最平凡的多继承
+
+```
+contract Base1{
+    function Func1(){}
+    
+}
+
+contract Base2{
+    function Func2(){}
+}
+  
+contract Final is Base1, Base2 {
+    
+}
+```
+
+##### 重名函数的overide次序
+```
+pragma solidity ^0.4.14;
+
+contract Base1{
+    function Func1(){}
+    
+}
+
+contract Base2{
+    function Func1(){}
+}
+  
+contract Final is Base1, Base2 {
+    
+}
+
+contract test{
+    Final f = new Final();
+    //在一个contract中创建一个新的contract
+    f.Func1();
+    //继承顺位是从后往前，因为Base2在后，所以调用的是Base2
+}
+```
+
+##### super：动态绑定上级函数
+```
+pragma solidity ^0.4.14;
+
+contract foundation{
+    function func1(){
+        //do something
+    }
+}
+
+contract Base1{
+    function func1(){super.func1();}
+    
+}
+
+contract Base2{
+    function func1(){super.func1();}
+}
+  
+contract Final is Base1, Base2 {
+    Final f = new Final();
+    f.func1(); 
+    //这里Func1调用时Base2里的func1，但Base2是调用的不是foundation的func1！
+    //函数调用次序，Base2.func1,Base1.func1,foundation.func1
+    //谁定义了这种线性结构？
+
+}
+
+```
+
+##### super：动态绑定上级函数
+假设下面所有合约都有一个同名函数，实现都为如下，函数调用的顺序是什么？
+```
+funciton foo(){
+super.foo();
+}
+contract O
+conract A is O
+contract B is O
+contract C is O
+contract D is O
+contract E is O
+contract K1 is C, B ,A
+contract K2 is E,B,D
+contract K3 is A,D
+contract Z is K3, K2, K1
+//假设每一个合约里都有一个super.foo,那么到底是谁？
+```
+跟python一样，多继承method Resolution Order 使用C3Linearization： 网上搜，老董答疑
+不能出现环路
 
 
 # 问题
