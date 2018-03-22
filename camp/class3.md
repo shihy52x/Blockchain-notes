@@ -263,7 +263,7 @@ contract Child is Parent{
 }
 
 ```
-#### 继承-Interface
+##### 继承-Interface
 像抽象合约，但本身离合约更远一步
 跟抽象合约相比：
 抽象合约可以有自己的状态变量，创造函数
@@ -294,12 +294,12 @@ contract Child is Parent{
 
 
 ```
-#### 继承- 多继承
+##### 继承- 多继承
 最复杂：
 solidity其他不行，但这个倒是很完备
 ```
 ```
-##### 最平凡的多继承
+###### 最平凡的多继承
 
 ```
 contract Base1{
@@ -316,7 +316,7 @@ contract Final is Base1, Base2 {
 }
 ```
 
-##### 重名函数的overide次序
+###### 重名函数的overide次序
 ```
 pragma solidity ^0.4.14;
 
@@ -341,7 +341,7 @@ contract test{
 }
 ```
 
-##### super：动态绑定上级函数
+###### super：动态绑定上级函数
 ```
 pragma solidity ^0.4.14;
 
@@ -371,7 +371,7 @@ contract Final is Base1, Base2 {
 
 ```
 
-##### super：动态绑定上级函数
+###### super：动态绑定上级函数
 假设下面所有合约都有一个同名函数，实现都为如下，函数调用的顺序是什么？
 ```
 funciton foo(){
@@ -391,6 +391,166 @@ contract Z is K3, K2, K1
 ```
 跟python一样，多继承method Resolution Order 使用C3Linearization： 网上搜，老董答疑
 不能出现环路
+#### 代码example
+employee前面声明public之后，你就能在solidity旁边看到emloyee的信息了
+```
+mapping (address=>Employee) public employees;
+
+```
+### Modifier
+
+现在很多函数里面都要检查 require， assert 等
+有没有办法简化写法呢？-modifier
+modifier 可以带参数：用全局变量参数或者要replace代码的那个function里的参数
+
+```
+pragma solidity ^0.4.14;
+
+pragma solidity ^0.4.14;
+
+contract Payroll {
+    struct Employee {
+        address id;
+        uint salary;
+        uint lastPayday;
+    }
+    
+    uint constant payDuration = 10 seconds;
+    uint totalSalary = 0;
+    address owner;
+    mapping (address=>Employee) public employees;
+    
+    function Payroll() {
+        owner = msg.sender;
+    }
+    
+     modifier onlyOwner {
+         //like decorator in python. but litttle different
+        require(msg.sender == owner);
+        // replace the code before the function
+
+        _;
+    }
+
+    modifier employeeExist(address employeeId){
+        var employee = employees[employeeId];
+        assert(employee.id != 0x0);
+        _;
+    }
+    
+    function _partialPaid(Employee employee) private {
+        if(employee.id !=0x0){
+            uint payment = employee.salary * (now - employee.lastPayday) / payDuration;
+            employee.id.transfer(payment);
+        }
+    }
+    
+
+
+    function addEmployee(address employeeId, uint salary) onlyOwner{
+        var employee  = employees[employeeId];
+        assert(employee.id == 0x0);
+        employees[employeeId] = Employee(employeeId, salary * 1 ether,now);
+        totalSalary += salary * 1 ether;
+    }
+    
+    function removeEmployee(address employeeId) onlyOwner employeeExist(employeeId) {
+        var employee = employees[employeeId];
+        _partialPaid(employee);
+        totalSalary -= employee.salary * 1 ether;
+
+        delete employees[employeeId];
+
+    }
+    
+    function updateEmployee(address employeeId, uint salary) onlyOwner employeeExist(employeeId) {
+        var employee = employees[employeeId];
+        employees[employeeId].lastPayday = now;
+        _partialPaid(employee);
+        totalSalary += (salary - employee.salary) * 1 ether;
+        employees[employeeId].salary = salary * 1 ether;
+
+        
+    }
+    
+    
+    function addFund() payable returns (uint) {
+        return this.balance;
+    }
+    
+    function calculateRunway() returns (uint) {
+        return this.balance / totalSalary;
+    }
+    
+    function hasEnoughFund() returns (bool) {
+        return this.calculateRunway()>0;
+    }
+    
+    function getPaid()  employeeExist(msg.sender){
+        var employee = employees[msg.sender];
+        assert(now - employee.lastPayday > payDuration);
+        uint nextPayday = employee.lastPayday + payDuration;
+        employees[msg.sender].lastPayday = nextPayday;
+        employee.id.transfer(employee.salary);
+        
+    }
+}
+
+
+```
+
+Modifier 进阶：
+replace after return
+
+```
+modifier someModifier{
+_;
+a=1;
+}
+
+funciton parentFunc2(uint value) someModifier public returns(uint){
+a= value;
+return a
+
+}
+```
+### solidity 中的加减乘除很危险
+溢出之后，钱就乱了
+可以
+c = a- 100
+assert(c<a)
+```
+pragma solidity ^0.4.0;
+contract Test{
+    uint8 public a=101;
+    function set(){
+        a-=100;
+    }
+    
+}
+```
+不想繁琐的家assert 怎么办？用库-OpenZeppelin
+Zeppelin-solidity/contract/SafeMath
+https://github.com/OpenZeppelin/zeppelin-solidity/blob/master/contracts/math/SafeMath.sol
+```
+pragma solidity ^0.4.14;
+import './SafeMath.sol';
+
+contract test{
+    uint8 public a=101;
+    function set(){
+        a = SafeMath.sub(a,100);
+    }
+}
+contract test2{
+    uint8 public a=101;
+    using SafeMath for uint8;
+    function set(){
+        a = a.sub(100);
+    }
+}
+```
+
 
 
 # 问题
