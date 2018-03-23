@@ -24,3 +24,5 @@ abi知道哪些函数可以调用
 ### 客户端
 如果用到guss paras，都是基于实际的ethrem网络，成本高，不利于开发测试，2 出块儿时间慢
 所以Truffle有另一个客户端，基于javascript模拟器，不需要挖苦
+视频让搜索：testrpc
+实际要搜索ganache-cli
