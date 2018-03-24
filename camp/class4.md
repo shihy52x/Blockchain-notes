@@ -59,7 +59,12 @@ abi知道哪些函数可以调用
 - truffle console
   - 通过 truffle console 跟已经deploy 到network上的contract进行交互
    - MetaCoin.depolyed().then(contract =>{metacoin=contract}) 这是异步方程，用javascript里面的promise？将结果赋值给metacoin这个变量. contract 实例
-  - metacoin.getBalance.call('0x41041202a766ce36885314eed8624e9593aca3c1').then(result=>{console.log(result)})
+  metacoin.getBalance.call('0x41041202a766ce36885314eed8624e9593aca3c1').then(result=>{console.log(result)})
+  //
+  metacoin.sendCoin.call('0x41041202a766ce36885314eed8624e9593aca3c1',2000).then(result=>{console.log(result)})
+  //这个call虽然send了2000到这个地址，但是因为用的是call()，随意，只会修改本地node的值，没有保存在区块链上 
+    metacoin.sendCoin.call('0x41041202a766ce36885314eed8624e9593aca3c1',2000).then(result=>{console.log(result)})
+  //这个是发送到了区块链上了，返回信息是trasaction的具体的信息，
 
 - truffle test
 - truffle unbox
@@ -90,3 +95,121 @@ abi知道哪些函数可以调用
  - 随便选一个 metacoin.getBalance.call()
  web3. + TAB 列出可用的method
  
+## 前段开发并发布只能合约
+- truffle box
+truffle里面已经准备好的脚手架，不仅有一些contract，还有一些前段的代码，可以使用直接开发前段应用
+使用web3 javascript library
+下载方法：
+http://truffleframework.com/boxes/react
+而因为我们的virtual box 已经安装好了，所以直接用就好
+
+- config/ 前段构建需要的配置文件
+- node_modules 前段的依赖文件
+- public 图片或者静态文件
+- script 前段运行需要的一些程序
+- src 前段的源代码，前段开发的时候主要写代码的地方
+- package jason 前段开发
+- contracts
+ - SimpleStorage.sol 
+- migration
+
+运行前段的步骤
+cd react/
+1 truffle compile
+2 truffle migrate or trffle migration
+3 npm run start 
+4 进入浏览器，输入 localhost:3000 
+6 
+ - 到 src/css font size set up. pure-min.css： 前段框架的文件： 雅虎的开源的前段框架 ./fonts/ 字体 
+ - utils/getWeb3.js: 用来获取web3实例的程序
+ - index.js React 程序的入口（可以去查看官方网站），可以非常方便的构建前段的程序。需要自己学习开发的相关的知识
+ - app.js 存了很多我们之前在console mode里面的很多的操作
+   - 修改simpleStorageInstance.set(10, {from: accounts[0]}) 里面的值，然后save，后端就会自动的compile，浏览器中的数值也会改变
+   
+   ## 如何测试
+   在智能合约中尤其重要：跟钱相关，很多操作是不可逆的
+   之前我们有很多的手动的测试，人多了之后测试不理想，浪费时间。所以需要自动化进行测试
+   truffle提供了两种测试的方法：
+   - js
+      -Mocha
+      -Chai
+   -Solidity
+   
+ ### test/simplestorage.js
+ 
+ ```
+ contract('SimpleStorage', function(accounts) {
+// 跟java中的describe（）很像？ 创建一个clean 的环境进行测试
+
+var SimpleStorage = artifacts.require("./SimpleStorage.sol");
+
+contract('SimpleStorage', function(accounts) {
+
+  it("...should store the value 89.", function() {
+  // it 关键词在这里描述我们要做的测试
+    return SimpleStorage.deployed().then(function(instance) {
+   //获取当前已经部署的simplestrorage的instance
+   simpleStorageInstance = instance;
+
+      return simpleStorageInstance.set(89, {from: accounts[0]});
+      // 将数值设为89
+    }).then(function() {
+      return simpleStorageInstance.get.call();
+    }).then(function(storedData) {
+    //获取新的数值
+      assert.equal(storedData, 89, "The value 89 was not stored.");
+    });
+  });
+
+});
+```
+### 用solidity 写测试
+/test/TestSimpleStrorage.sol
+```
+pragma solidity ^0.4.2;
+
+import "truffle/Assert.sol";
+import "truffle/DeployedAddresses.sol";
+import "../contracts/SimpleStorage.sol";
+//truffle 提供的辅助的测试的合约
+contract TestSimpleStorage {
+//强制明明规则：必须以Test开头 for contract，function里要以test开头
+  function testItStoresAValue() {
+    SimpleStorage simpleStorage = SimpleStorage(DeployedAddresses.SimpleStorage());
+   //获取当前simpleStorage的地址，获得一个instance：例子
+   simpleStorage.set(89);
+
+    uint expected = 89;
+
+    Assert.equal(simpleStorage.get(), expected, "It should store the value 89.");
+  }
+
+}
+
+```
+### 比较两种测试方法 javascript 和solidity 对比？
+ - Solidity 优点：简洁（适合小的单元测试）
+  -javascript 用了8行，而solidity只用用了3行，主要原因是javascript中要依赖异步执行，而solidity可以直接拿到结果
+  -java script只能调用public的external的function，而solidity可以调用internal的函数
+ - javascript优点：
+  - javascript中的测试跟前段的测试基本相似，所以可以用javascript来模拟前段的使用：这种叫做整合式的测试
+  - 用havascript来写测试还可以有强大的语法
+  - javascript中可以简单实现程序异常的补充，solidity中没有太好的解决方案。虽然truffle提供了一些方法，但还是比较麻烦
+所以结论是：推荐大家用javascript写test.而solidity可以简单写一些小的单元测试，来覆盖边缘的条件
+
+
+###怎么测试?
+修改完simplesrorage.js 或者 TestSimpleStorage.sol之后，返回terminal，运行 truffle test
+则test中的两个文件会进行编译并运行
+
+
+##总结：
+- 安装truffle 
+- truffle init 初始化一个项目
+- truffle compile 编译智能合约
+- truffle migrate 将智能合约部署到etherum网络： 学些了testrpc工具代替传统etherum客户端来快速开发程序
+- truffle console 和部署的智能合约进行交互
+- truffole test
+- truffle unbox 下载一个已经配置好的前段环境来开发前段应用
+- truffle 前段应用开发
+- 下节课开发员工系统的开发程序
