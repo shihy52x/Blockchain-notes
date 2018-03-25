@@ -59,12 +59,12 @@ abi知道哪些函数可以调用
 - truffle console
   - 通过 truffle console 跟已经deploy 到network上的contract进行交互
    - MetaCoin.depolyed().then(contract =>{metacoin=contract}) 这是异步方程，用javascript里面的promise？将结果赋值给metacoin这个变量. contract 实例
-  metacoin.getBalance.call('0x41041202a766ce36885314eed8624e9593aca3c1').then(result=>{console.log(result)})
+  metacoin.getBalance.call(adress A).then(result=>{console.log(result)})
   //
-  metacoin.sendCoin.call('0x41041202a766ce36885314eed8624e9593aca3c1',2000).then(result=>{console.log(result)})
+  metacoin.sendCoin.call(addressB,2000).then(result=>{console.log(result)})
   //这个call虽然send了2000到这个地址，但是因为用的是call()，随意，只会修改本地node的值，没有保存在区块链上 
-    metacoin.sendCoin.call('0x41041202a766ce36885314eed8624e9593aca3c1',2000).then(result=>{console.log(result)})
-  //这个是发送到了区块链上了，返回信息是trasaction的具体的信息，
+    metacoin.sendCoin(addressB,100).then(result=>{console.log(result)})
+  //这个是发送到了区块链上了，返回信息是trasaction的具体的信息这时，addressA里面的balance减少100，而addresssB增加100
 
 - truffle test
 - truffle unbox
