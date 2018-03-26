@@ -213,3 +213,112 @@ contract TestSimpleStorage {
 - truffle unbox 下载一个已经配置好的前段环境来开发前段应用
 - truffle 前段应用开发
 - 下节课开发员工系统的开发程序
+
+
+
+Test:
+
+```
+var SimpleStorage = artifacts.require("./SimpleStorage.sol")
+//当然这个地方要用到SimpeStorage这个智能合约里的function
+contract('SimpleStorage', function(accounts) {
+//accounts的值应该是从web3里定义的，是个数组.而这个是要传入到下面的
+  it("...should store the value 89.", function() {
+    return SimpleStorage.deployed().then(function(instance) {
+      simpleStorageInstance = instance;
+      //这里instance是部署了之后产生的，需要在这个测试文件里赋值给simpleStorageInstance这个变量，后面就可以用simpleStorageInstance来进行操作了
+      return simpleStorageInstance.set(89, {from: accounts[0]});
+      //这里调用了set对第一个account进行设置，返回的是True而已，所以返回值不会用到下一步，而你会看到下面那个function的参数是空的
+    }).then(function() {这里
+      return simpleStorageInstance.get.call();
+      //这里get这个函数会返回storeData，而这个storeData又会返回给web3的变量，接着就传到下一步function里面
+    }).then(function(storedData) {
+      assert.equal(storedData, 89, "The value 89 was not stored.");
+    });
+  });
+
+});
+
+```
+```
+var MetaCoin = artifacts.require("./MetaCoin.sol");
+
+contract('MetaCoin', function(accounts) {
+  it("should put 10000 MetaCoin in the first account", function() {
+    return MetaCoin.deployed().then(function(instance) {
+    //这里web3产生了一个instance
+      return instance.getBalance.call(accounts[0]);
+      //这个instance没有赋给哪个变量，可以直接用instance.XX来调用method,getbalance返回的是balances[address]-balanceobject,这个balance object会直接传给下一个function
+      }).then(function(balance) {
+      assert.equal(balance.valueOf(), 10000, "10000 wasn't in the first account");
+      //调用balance里的值
+    });
+  });
+  
+  //再来第二个it
+  it("should call a function that depends on a linked library", function() {
+    var meta;
+    var metaCoinBalance;
+    var metaCoinEthBalance;
+   //在it中定义几个对这个it的变量
+    return MetaCoin.deployed().then(function(instance) {
+      meta = instance;
+      //这个instance定义给了meta,这样后面的function也可以调用meta了
+      return meta.getBalance.call(accounts[0]);
+      //返回的是一个balance的object,可以传给下面用-叫outCoinBalance
+    }).then(function(outCoinBalance) {
+      metaCoinBalance = outCoinBalance.toNumber();
+      // 这个outCoinBalance是个balanceobject？
+      return meta.getBalanceInEth.call(accounts[0]);
+    }).then(function(outCoinBalanceEth) {
+      metaCoinEthBalance = outCoinBalanceEth.toNumber();
+    }).then(function() {
+      assert.equal(metaCoinEthBalance, 2 * metaCoinBalance, "Library function returned unexpected function, linkage may be broken");
+    });
+  });
+  
+  //再来一个it
+  it("should send coin correctly", function() {
+    var meta;
+
+    // Get initial balances of first and second account.
+    var account_one = accounts[0];
+    var account_two = accounts[1];
+    var account_one_starting_balance;
+    var account_two_starting_balance;
+    var account_one_ending_balance;
+    var account_two_ending_balance;
+
+    var amount = 10;
+// 这个amount 会用在下面不同的function里面
+    return MetaCoin.deployed().then(function(instance) {
+      meta = instance;
+ return meta.getBalance.call(account_one);
+ //返回balance传给下面的funciton
+    }).then(function(balance) {
+      account_one_starting_balance = balance.toNumber();
+      return meta.getBalance.call(account_two);
+      // balance原来是个stringobject，转换成number，返回第二个balance传到下面
+    }).then(function(balance) {
+      account_two_starting_balance = balance.toNumber();
+      return meta.sendCoin(account_two, amount, {from: account_one});
+      //得到第二个balance后，进行一个sendCoin的操作，把第一个账户的钱转到第二个账户.
+    }).then(function() {
+      return meta.getBalance.call(account_one);
+      //这里account_one 是upperlevel的变量，所以可以直接用，返回一个string object，传到下面
+    }).then(function(balance) {
+      account_one_ending_balance = balance.toNumber();
+      //这里得到一个balance的值再次传入下面
+      return meta.getBalance.call(account_two);
+    }).then(function(balance) {
+      account_two_ending_balance = balance.toNumber();
+      //进行一个asert操作
+      assert.equal(account_one_ending_balance, account_one_starting_balance - amount, "Amount wasn't correctly taken from the sender");
+      assert.equal(account_two_ending_balance, account_two_starting_balance + amount, "Amount wasn't correctly sent to the receiver");
+    });
+  });
+});
+
+
+
+```
