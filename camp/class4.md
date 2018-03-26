@@ -322,3 +322,47 @@ contract('MetaCoin', function(accounts) {
 
 
 ```
+
+# 加餐内容
+
+### 合约A部署到以太坊网络中后，A可以调用已经在网络中部署好的合约B的代码吗，可以的话怎么调用？ （假设B是另外一个公司写的合约代码）
+- 答案是可以调用，只要B的合约是public的
+- 调用有两种方法
+ - 使用call函数，调用过程中，调用的返回一定只能是bool，调用成功或者失败，funciton本身返回值是无法拿到的，原因是以太坊的value无法定义多长
+ - 方法2，B合约写个骨架，然后在A中调用，
+ - 如果真的想拿B的return结果，要接入汇编，比较危险的操作，现在不涉及
+ 
+ ### 2. 合约D引用了Library C的代码，那么这个Library C是需要跟D一起静态编译后再部署到主网。还是C可以被别人事前部署到主网，这样我们不需要编译C的代码，D部署到主网后只需要运行时调用C，像动态链接一样
+ 
+ C是可以是可以先部署到主网上的，
+ library的坏处: library不能直接access本身的class的data的
+ 代码的真正重用可以实现吗？
+ 比如一个多签名钱包，写一次之后，不想让大家再写，再部署，怎么实现
+ 有一个共同的函数，汇编写的，放到区块链上，把代码考到本地的栈上，但是这个copy是有风险的，比如去年parity的多签名钱包被攻击，攻击者发现很多合约在copy一个单一的代码，而不是重新部署，destruct函数没有被屏蔽到。于是github有个user就修改了一下，把原合约杀掉了。于是新用户拷贝的东西是一个空指针0x0。所有资金都被锁在了一个很傻的合约中。就是想共享code操作出现了失误
+ ### web3借口具体命令很多，有案例可以参考吗？
+ web3的接口实际上是etherem api的完整的映射，在javascript中的完整的映射，是etherum full node（不是nodejs） 做的一个包装，我觉得最好的reference是etherum本身的api的reference
+ https://github.com/ethereum/wiki/wiki/JSON-RPC#json-rpc-methods
+ 这个链接中可以看到每一个etherum的api都有详细解释，所以web3文档做的差，是完整映射
+ ### frank说的方程是指function吗？不是的话，有什么区别？
+ 
+ ### truffle 测试时候，怎么切换使用者地址
+ 在使用js测试的时候，可以定义from address来change msg.sender
+ meta.sendCoin(account_two,account,{from:account_one});
+ payroll.getPaid({from:account_one});
+ 
+ ### 你一开始有增加员工的地址么？这里我忘记·“”· 需不需要了，理论上是不会出错的，如果有问题我们可以offline讨论一下，看看能不能reproduce
+: 问 对，就是这个函数，怎么都报错不是员工账号
+ 
+ ### contract 的 lifecycle
+ 再部署区块链的时候，底层到底发生了什么？我们
+ 我们在部署合约的时候，我们发的binary code不光是以后在区块链上运行的一段binary code，与此同时也是部署的binary code，相当于用代码generate在区块链中部署的代码。可以认为是function call，在contract create的时候可以看到有execution cost，就是因为创建的过程也是程序执行的步骤
+ 
+
+### 能改balance的值吗
+testrpc可以被query，但是独立的控制体系，在课程录制的时候没办法，现在有一些额外的工具可以去控制testrpc，这样的framework。
+https://github.com/trufflesuite/ganache-cli
+这个不是standard，只是为了测试方便
+
+### 问 能讲下现在最新的智能合约发展趋势吗，就是其他区块链项目对solidity的改进，假如有时间的话
+solidity有很大的问题：是一个不好formly define 形式化验证。现在的其他平台，比如definity，底层的架构是ewarsom，ewarsom在e0早期被作为虚拟机提出的，
+ewarsom本身是基于web assembly
