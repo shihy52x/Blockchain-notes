@@ -177,15 +177,15 @@ class Common extends Component {
 
   componentDidMount() {
   //当组件被加载到浏览器里的时候，将运行以下代码。 就是上面那个app.js里面最后的renderfunction 的<div> payroll && common call的
-    const { payroll, web3 } = this.props; // props 是个dictionary，里面就是上面传入的 account, payrll(instance) and web3(instance)
-    const updateInfo = (error, result) => {
-      if (!error) {
+    const { payroll, web3 } = this.props; // props 是个dictionary，里面就是上面传入的 account, payrll(instance) and web3(instance).这里有两个，说明上面传错了
+    const updateInfo = (error, result) => { //这个 updateInfo 的funciton合约里还没有，需要加上
+      if (!error) {
         this.checkInfo();
       }
     }
 
-    this.newFund = payroll.NewFund(updateInfo);
-    this.getPaid = payroll.GetPaid(updateInfo);
+    this.newFund = payroll.NewFund(updateInfo); //这个function需要手动写上
+    this.getPaid = payroll.GetPaid(updateInfo);
     this.newEmployee = payroll.NewEmployee(updateInfo);
     this.updateEmployee = payroll.UpdateEmployee(updateInfo);
     this.removeEmployee = payroll.RemoveEmployee(updateInfo);
